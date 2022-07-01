@@ -1,0 +1,128 @@
+/* custom styles by Pavan */
+
+/* global */
+body {
+    background-color: #fff3da;
+}
+
+.navbar-main {
+    background-color: #ffca73;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.card {
+    border: 0 !important;
+    box-shadow: 0 0 2rem 0 rgb(136 152 170 / 15%) !important;
+}
+
+.card-header {
+    background-color: #ffca73;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.card-body {
+    background-color: #fff3da;
+}
+
+input {
+    background-color: #fff !important;
+}
+
+a {
+    color: #8f3700 !important;
+    transition: .3s;
+}
+
+.a:hover {
+    color: #f36c21 !important;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #8f3700;
+    border-color: #8f3700;
+    transition: .3s;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #f36c21;
+    border-color: #f36c21;
+}
+
+.home-block .card-body {
+    background-color: #fff;
+    min-height: 80vh;
+}
+
+.container-full {
+    padding: 20px;
+}
+
+
+/* global end */
+
+/* login */
+.main-login-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh !important;
+
+}
+
+.main-login-block .login-block {
+    padding: 20px;
+}
+
+.login-block .card-header {
+    text-align: center;
+}
+
+.login-block .card-body {
+    padding: 60px 10px;
+}
+
+.back-img {
+    position: fixed;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* login end*/
+
+/* dashboard */
+
+.margin {
+    margin: auto;
+}
+
+.margin li a {
+    border: solid #8f3700 1px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box .row {
+    width: 50%;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.error-help-block {
+    color: red;
+}
+
+.page-item.active .page-link {
+    color: #fff !important;
+}
