@@ -18,9 +18,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customerData = CustomerProfile::all();
-
-        return view('customer.index', compact('customerData'));
+        // 
     }
 
     /**
@@ -41,32 +39,7 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request)
     {
-        // dd($request->contact_email);
-
-        try {
-            DB::beginTransaction();
-
-            $createCustomer = CustomerProfile::create(
-                [
-                    'first_name' => $request->first_name,
-                    'last_name' => $request->last_name,
-                    'contact_email' => $request->contact_email,
-                    'phone_number' => $request->phone_number,
-                    'gender' => $request->gender,
-                    'address' => $request->address,
-                    'dob' => $request->dob,
-                    'is_active' => $request->is_active,
-                ]
-            );
-
-            DB::commit();
-
-            return redirect('/customer/list')->with('success', 'Customer Created!');
-        } catch (\Throwable $th) {
-            DB::rollback();
-            // throw $th;
-            return redirect()->back()->withInput()->with('error', 'Something went wrong!');
-        }
+        // 
     }
 
     /**
@@ -102,27 +75,7 @@ class CustomerController extends Controller
      */
     public function update(CustomerUpdateRequest $request, $id)
     {
-        try {
-
-            $customerData = CustomerProfile::where('id', $id)->first();
-
-            $customerData->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'contact_email' => $request->contact_email,
-                'phone_number' => $request->phone_number,
-                'gender' => $request->gender,
-                'address' => $request->address,
-                'dob' => $request->dob,
-                'is_active' => $request->is_active,
-            ]);
-
-            return redirect('/customer/list')->with('success', 'Customer Updated!');
-        } catch (\Throwable $th) {
-            DB::rollback();
-            // throw $th;
-            return redirect()->back()->withInput()->with('error', 'Something went wrong!');
-        }
+        // 
     }
 
     /**
@@ -133,16 +86,6 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        try {
-
-            $customerData = CustomerProfile::where('id', $id)->first();
-
-            $customerData->delete();
-            return redirect('/customer/list')->with('success', 'Customer Deleted!');
-        } catch (\Throwable $th) {
-            DB::rollback();
-            // throw $th;
-            return redirect()->back()->withInput()->with('error', 'Something went wrong!');
-        }
+        // 
     }
 }

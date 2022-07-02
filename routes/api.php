@@ -15,19 +15,21 @@ use App\Http\Controllers\API\PassportAuthController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+$api = app('Dingo\Api\Routing\Router');
+
+$api->version('v1', ['prefix' => 'api', 'namespace' => '\App\Http\Controllers\Auth'], function ($api) {
+    $api->post('login', 'AuthController@login');
+    $api->post('register', 'AuthController@register');
+});
 
 
-// $api = app('Dingo\Api\Routing\Router');
+$api->version('v1', ['prefix' => 'api', 'middleware' => ['auth:api'], 'namespace' => '\App\Http\Controllers\Auth'], function ($api) {
+    $api->post('logout', 'AuthController@logout');
+});
 
-// $api->version('v1', ['prefix' => 'api', 'namespace' => '\App\Http\Controllers\Auth'], function ($api) {
-//     $api->post('login', 'AuthController@login');
-//     $api->post('register', 'AuthController@register');
-// });
-
-
-// $api->version('v1', ['prefix' => 'api', 'middleware' => ['auth:api'], 'namespace' => '\App\Http\Controllers\Auth'], function ($api) {
-//     $api->post('logout', 'AuthController@logout');
-// });
+$api->version('v1', ['prefix' => 'api', 'middleware' => ['auth:api'], 'namespace' => '\App\Http\Controllers\Api'], function ($api) {
+    $api->get('customer/list', 'CustomerApiController@customerList');
+    $api->post('customer/store', 'CustomerApiController@customerCreate');
+    $api->put('customer/update/{id}', 'CustomerApiController@customerUpdate');
+    $api->delete('customer/delete/{id}', 'CustomerApiController@customerDelete');
+});

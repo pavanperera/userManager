@@ -11,8 +11,7 @@
                 <div class="card-header">{{ __('Sign up') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('/register') }}">
-                        @csrf
+                    <form method="POST" action="" autocomplete="off" enctype="multipart/form-data"  id="register_form">
 
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
@@ -66,15 +65,89 @@
 
                         <div class="row mb-0">
                             <div class="col-md-7 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" >
                                     {{ __('Register') }}
                                 </button>
                             </div>
                         </div>
                     </form>
+                
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('custom-scripts')
+
+<script>
+
+        $(document).on('submit','#register_form',function(e) {
+
+            e.preventDefault();
+
+            var name = $('#name').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            jQuery.ajax({
+                
+                    url: 'http://127.0.0.1:8000/api/register',
+                    type: 'post',
+                    data: {
+                        name: name,
+                        email: email,
+                        password: password,
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            Swal.fire({
+                                toast: true,
+                                position: 'bottom-end',
+                                icon: "warning",
+                                title: 'User Registered!',
+                                showConfirmButton: false,
+                                timer: 3500
+                            });
+
+                            window.location = "http://127.0.0.1:8000/dashboard"
+
+                        } else{
+                            Swal.fire({
+                                toast: true,
+                                position: 'bottom-end',
+                                icon: "warning",
+                                title: 'Unauthorised!',
+                                showConfirmButton: false,
+                                timer: 3500
+                            });
+                        }
+                    },
+                    error: function(response) {
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'error',
+                        title: "Something went wrong!",
+                        showConfirmButton: false,
+                        timer: 3500
+                    });
+                    //close alert
+                    Swal.hideLoading();
+                }
+                });
+
+        });
+
+</script>
+@endpush
+

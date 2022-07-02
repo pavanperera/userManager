@@ -11,7 +11,7 @@
                 <div class="card-header">{{ __('Sign in') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('/login') }}">
+                    <form method="POST" action="" autocomplete="off" enctype="multipart/form-data"  id="login_form">
                         @csrf
 
                         <div class="row mb-3">
@@ -58,3 +58,114 @@
     </div>
 </div>
 @endsection
+
+@push('custom-scripts')
+
+<script>
+
+        $(document).on('submit','#login_form',function(e) {
+
+            e.preventDefault();
+
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+            });
+
+            jQuery.ajax({
+                
+                    url: 'http://127.0.0.1:8000/api/login',
+                    type: 'post',
+                    data: {
+                        email: email,
+                        password: password,
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            Swal.fire({
+                                toast: true,
+                                position: 'bottom-end',
+                                icon: "success",
+                                title: 'Login Success!',
+                                showConfirmButton: false,
+                                timer: 3500
+                            });
+
+                            localStorage.setItem("token", response.auth_data.access_token);
+                            window.location = "http://127.0.0.1:8000/dashboard";
+
+                        }else{
+                            Swal.fire({
+                                toast: true,
+                                position: 'bottom-end',
+                                icon: "warning",
+                                title: response.message,
+                                showConfirmButton: false,
+                                timer: 3500
+                            });
+                        }
+                    },
+                    error: function(response) {
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'error',
+                        title: "Something went wrong!",
+                        showConfirmButton: false,
+                        timer: 3500
+                    });
+                    //close alert
+                    Swal.hideLoading();
+                }
+                });
+
+                console.log(localStorage.getItem("token"));
+
+                let token = localStorage.getItem("token");
+
+
+            function LoginCall(token){
+
+                jQuery.ajax({
+                
+                    url: 'http://127.0.0.1:8000/dashboard',
+                    headers: {
+                    Authorization: "Bearer " + token,
+                    Accept: "application/json"
+                    },
+                    type: 'get',
+                    data: {
+                        token: token,
+                    },
+                    success: function(response) {
+
+                        console.log(response);
+
+                    },
+                    error: function(response) {
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: 'error',
+                        title: "Something went wrong!",
+                        showConfirmButton: false,
+                        timer: 3500
+                    });
+                    //close alert
+                    Swal.hideLoading();
+                    }
+                });
+
+            }    
+
+        });
+
+</script>
+@endpush
+
