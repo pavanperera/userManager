@@ -70,7 +70,7 @@ class AuthController extends Controller
 
             if (Auth::loginUsingId($userCreate->id)) {
 
-                $tokenData = auth()->user()->createToken('UserManager', ['admin']);
+                $tokenData = auth()->user()->createToken('UserManager');
 
                 return response()->json([
                     'status' => 'success',
