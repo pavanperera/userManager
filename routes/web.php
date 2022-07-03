@@ -17,13 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\Auth\AuthController::class, 'index'])->name('login');
 Route::get('/sign-up', [App\Http\Controllers\Auth\AuthController::class, 'signUp']);
 
-Route::group(['middleware' => ['web']], function () {
+// Route::group(['middleware' => ['auth']], function () {
 
-    Route::post('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout']);
-    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+Route::post('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout']);
+Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
-    // customer pages
-    Route::get('/customer/list', [App\Http\Controllers\CustomerController::class, 'index']);
-    Route::get('/customer/create', [App\Http\Controllers\CustomerController::class, 'create']);
-    Route::get('/customer/edit/{id}', [App\Http\Controllers\CustomerController::class, 'edit']);
-});
+// customer pages
+Route::get('/customer/list', [App\Http\Controllers\CustomerController::class, 'index']);
+Route::get('/customer/create', [App\Http\Controllers\CustomerController::class, 'create']);
+Route::get('/customer/edit/{id}', [App\Http\Controllers\CustomerController::class, 'edit']);
+// });

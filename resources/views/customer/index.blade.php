@@ -28,7 +28,7 @@
 
                 <div class="card-body">
 
-                    <table class="table align-items-center table-flush company_table" cellspacing="0" width="100%">
+                    <table id="customer_table" class="table align-items-center table-flush customer_table" cellspacing="0" width="100%">
                         <thead class="thead-light">
                             <tr>
 
@@ -48,43 +48,8 @@
                     
                             </tr>
                         </thead>
-                        <tbody>
-            
-                            @foreach ($customerData as $customer)
-                                <tr>
-                                    <td>{{ $customer->first_name ?? '--' }}</td>
-                                    <td>{{ $customer->last_name ?? '--' }}</td>
-                                    <td>{{ $customer->phone_number ?? '--' }}</td>
-                                    <td>{{ $customer->contact_email ?? '--' }}</td>
-                                    <td>{{ $customer->dob ?? '--' }}</td>
-                                    <td>{{ $customer->age() ?? '--' }}</td>
-                                    <td>{{ $customer->gender ?? '--' }}</td>
-                                    <td>{{ $customer->address ?? '--' }}</td>
-                                    <td>
-                                        @if($customer->is_active == 1)
-                                        {{ 'Active' }}
-                                        @else
-                                        {{ 'Inactive' }}
-                                        @endif
-                                    </td>
-                                    <td>{{ $customer->created_at ?? '--' }}</td>
-                                    <td>{{ $customer->updated_at ?? '--' }}</td>
-                                    <td class="text-center">
-                                        <form action="{{url('/customer/edit',[$customer->id])}}" method="POST">
-                                            @method('GET')
-                                            @csrf
-                                            <button type="submit">Edit</button>               
-                                        </form>
-                                    </td>
-                                    <td class="text-center">
-                                        <form action="{{url('/customer/delete',[$customer->id])}}" method="POST">
-                                            @method('DELETE')
-                                            @csrf
-                                            <button type="submit">Delete</button>               
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
+                        <tbody id="tbl_body">
+
                         </tbody>
                     </table>
                 </div>
@@ -95,45 +60,133 @@
 @endsection
 
 @push('js')
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/r-2.2.3/datatables.min.js"></script>
+
 @endpush
 
 @push('custom-scripts')
 
-<script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-    $('.company_table').DataTable({
-        responsive: true,
-        columnDefs: [{
-            responsivePriority: 1,
-            targets: 0
-            },
-            {
-            responsivePriority: 1,
-            targets: 2
-            },
-            {
-            responsivePriority: 2,
-            targets: 3
-            },
-            {
-            responsivePriority: 1,
-            targets: -2
-            },
-            {
-            responsivePriority: 1,
-            targets: -1
-            }
-            ],
-            language: {
-                    oPaginate: {
-                        sNext: '<i class="fa fa-angle-right"></i>',
-                        sPrevious: '<i class="fa fa-angle-left"></i>',
-                        sFirst: '<i class="fa fa-step-backward"</i>',
-                        sLast: '<i class="fa fa-step-forward"></i>'
+<script>
+    
+    $(document).ready( function () {
+
+        $.ajax({
+            url:'http://127.0.0.1:8000/api/customer/list',
+            type: 'get',
+            dataType: 'json',
+
+            success: function(response) {
+
+                var len = 0;
+                if (response.customer_data != null) {
+                    len = response.customer_data.length;
+                }
+
+
+                if (len > 0) {
+
+                    for (var i = 0; i < len; i++) {
+
+                        var id = response.customer_data[i].id;
+                        var first_name = response.customer_data[i].first_name;
+                        var last_name = response.customer_data[i].last_name;
+                        var phone_number = response.customer_data[i].phone_number;
+                        var contact_email = response.customer_data[i].contact_email;
+                        var dob = response.customer_data[i].dob;
+                        var first_name = response.customer_data[i].first_name;
+                        var gender = response.customer_data[i].gender;
+                        var address = response.customer_data[i].address;
+                        var is_active = response.customer_data[i].is_active;
+                        var created_at = response.customer_data[i].created_at;
+                        var updated_at = response.customer_data[i].updated_at;
+
+                        // calculate age
+                        var month_diff = Date.now() - Date.parse(dob);  
+                        var age_dt = new Date(month_diff);
+                        var year = age_dt.getUTCFullYear(); 
+                        var age = Math.abs(year - 1970);
+
+                        // status
+                        if(is_active == 1){
+                            var is_active = 'Active';
+                        }else{
+                            var is_active = 'Inactive';
+                        }
+                        
+                        // edit link
+                        var edit_url = "http://127.0.0.1:8000/customer/edit/" + id;
+
+                        // delete link
+                        var delete_url = "http://127.0.0.1:8000/api/customer/delete/" + id;
+
+
+
+                        var customer = "<tr> <td>" + first_name +"<td>"+ last_name + "</td>"+ "<td>"+ phone_number + "</td>"+ "<td>"+ contact_email + "</td>"+ "<td>"+ dob + "</td>"+"<td>"+ age + "</td>"+"<td>"+ gender + "</td>"+"<td>"+ address + "</td>"+"<td>"+ is_active + "</td>"+"<td>"+ created_at + "</td>"+"<td>"+ updated_at + "</td>"+"<td> <a href='"+ edit_url +"'> Edit </a></td>"+ "<td> <a href='#' onclick='myFunction("+ id +")'> Delete </a></td> </tr>";
+
+                        $("#tbl_body").append(customer);
                     }
                 }
+
+            }
+        });
+
+
+
+
+    } );
+
+    
+    function myFunction(id) {
+
+            var customer_id = id;
+
+            jQuery.ajax({
+
+            url: 'http://127.0.0.1:8000/api/customer/delete/' + customer_id ,
+            type: 'delete',
+
+            success: function(response) {
+                if (response.status == 'success') {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: "warning",
+                        title: 'User Deleted!',
+                        showConfirmButton: false,
+                        timer: 3500
+                    });
+
+                    window.location = "http://127.0.0.1:8000/customer/list"
+
+                } else{
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        icon: "warning",
+                        title: 'Unauthorised!',
+                        showConfirmButton: false,
+                        timer: 3500
+                    });
+                }
+            },
+            error: function(response) {
+
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                icon: 'error',
+                title: "Something went wrong!",
+                showConfirmButton: false,
+                timer: 3500
             });
+            //close alert
+            Swal.hideLoading();
+            }
+            });
+
+        }
+
 
 </script>
 @endpush

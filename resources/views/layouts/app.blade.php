@@ -46,14 +46,14 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto margin">
 
-                        @auth
+                        {{-- @auth --}}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/customer/list') }}">{{ __('Customer List') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/customer/create') }}">{{ __('Customer Create') }}</a>
                         </li>
-                        @endauth
+                        {{-- @endauth --}}
 
                     </ul>
 

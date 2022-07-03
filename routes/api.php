@@ -27,7 +27,7 @@ $api->version('v1', ['prefix' => 'api', 'middleware' => ['auth:api'], 'namespace
     $api->post('logout', 'AuthController@logout');
 });
 
-$api->version('v1', ['prefix' => 'api', 'middleware' => ['auth:api'], 'namespace' => '\App\Http\Controllers\Api'], function ($api) {
+$api->version('v1', ['prefix' => 'api', 'namespace' => '\App\Http\Controllers\Api'], function ($api) {
     $api->get('customer/list', 'CustomerApiController@customerList');
     $api->post('customer/store', 'CustomerApiController@customerCreate');
     $api->put('customer/update/{id}', 'CustomerApiController@customerUpdate');

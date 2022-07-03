@@ -31,6 +31,8 @@
                         @csrf
                         <div class="box">
 
+                            <input type="hidden" name="id" id="customer_id" value="{{ old('id', $customerData->id) }}">
+
                             <div class="row">
 
                                 <div class="col-12">
@@ -138,6 +140,80 @@
 
 <script>
 
+        $(document).on('submit','#customer_update_form',function(e) {
+
+                e.preventDefault();
+
+                var id = $('#customer_id').val();
+                var first_name = $('#input-first_name').val();
+                var last_name = $('#input-last_name').val();
+                var contact_email = $('#input-contact_email').val();
+                var phone_number = $('#input-phone_number').val();
+                var gender = $('#select-gender').val();
+                var address = $('#input-address').val();
+                var dob = $('#input-dob').val();
+                var is_active = $('#select-is_active').val();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                jQuery.ajax({
+                    
+                        url: 'http://127.0.0.1:8000/api/customer/update/' + id,
+                        type: 'PUT',
+                        data: {
+                            first_name: first_name,
+                            last_name: last_name,
+                            contact_email: contact_email,
+                            phone_number: phone_number,
+                            gender: gender,
+                            address: address,
+                            dob: dob,
+                            is_active: is_active,
+                        },
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'bottom-end',
+                                    icon: "warning",
+                                    title: 'Customer Updated!',
+                                    showConfirmButton: false,
+                                    timer: 3500
+                                });
+
+                                window.location = "http://127.0.0.1:8000/customer/list"
+
+                            } else{
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'bottom-end',
+                                    icon: "warning",
+                                    title: 'Unauthorised!',
+                                    showConfirmButton: false,
+                                    timer: 3500
+                                });
+                            }
+                        },
+                        error: function(response) {
+
+                        Swal.fire({
+                            toast: true,
+                            position: 'bottom-end',
+                            icon: 'error',
+                            title: "Something went wrong!",
+                            showConfirmButton: false,
+                            timer: 3500
+                        });
+                        //close alert
+                        Swal.hideLoading();
+                    }
+                    });
+
+        });
 
 </script>
 
